@@ -7,4 +7,6 @@ by Moon-Hyun Cha and Jeongwoon Hwang, submitted
 * In each directory, there're figures (image data mimicking quantum dot chains) and corresponding labels (transmission probility data represented by 1000 data points)
 
 2. Code for machine learning : basic_run.py, adaptive_run.py, FNN_run.py
-3. Code for analysis : Analysis.py
+* python3 basic_run.py, in terminal
+ 
+4. Code for analysis : Analysis.py

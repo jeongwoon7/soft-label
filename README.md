@@ -8,5 +8,7 @@ by Moon-Hyun Cha and Jeongwoon Hwang, submitted
 
 2. Code for machine learning : basic_run.py, adaptive_run.py, FNN_run.py
 * python3 basic_run.py, in terminal
+
+3. Module containing functions used for ML : Module.py
  
 4. Code for analysis : Analysis.py

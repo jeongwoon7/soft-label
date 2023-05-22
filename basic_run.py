@@ -20,15 +20,15 @@ optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 #--------------------------------------------------------------
 
 #----- Directory for saving models during learning.
-path="./DE01/saved_models"
-figpath="./DE01/loss.png"
+path="./basic/saved_models"
+figpath="./basic/loss.png"
 
 isExist = os.path.exists(path)
 if not isExist:
     os.makedirs(path)
 
 #----- Data load --------------------
-datapath="./test_default"
+datapath="./test_lhc"
 locals()
 
 train_set=M.CustomDataset(path=datapath, train=True)

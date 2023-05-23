@@ -34,7 +34,7 @@ model2=M.loss_pred_ResNet(M.BasicBlock,[2,2,2,2]).to(device)
     test set : from 200 to 199799
     valid set : from 199800 to 199999 
 - Due to the storage limit, however, we counldn't upload the whole 200000 data.
-    * However, to see how the adaptive run work, you can use "test_adaptive_git" with 4000 data, instead. 
+    * However, to see how the adaptive run works, you can use "test_adaptive_git" with 4000 data, instead. 
     * in this case, train set : from 0 to 199, test set : from 200 to 3799, and valid set : from 3800 to 3999
 -------------------------------------------------------------------------------------------------------------
 """
@@ -53,8 +53,8 @@ optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 optimizer2 = torch.optim.SGD(model2.parameters(), lr=learning_rate)
 
 #------------- Data load --------------------
-datapath="./test_adaptive_git/"  # upper directory of train, test, valid directories
-savedir="./ML_adapt/" # directory for saving models during learning
+datapath="./test_adaptive_git/"     # upper directory of train, test, valid directories
+savedir="./ML_adapt/"               # directory for saving models during learning
 #--------------------------------------------------------------
 
 path=savedir+"saved_models"
@@ -80,9 +80,9 @@ def loss_predict(test_sample_list):
         fname=str(i)+".png"
         fname2=str(i)+".txt"
         p1=datapath+"figures/test/"
-        img_path=os.path.join(p1,fname) # Actually, not a test set but a "candidate" data set to add to the train set.
+        img_path=os.path.join(p1,fname)         # Actually, not a test set but a "candidate" data set to add to the train set.
 
-        img=Image.open(img_path).convert("L") # greyscale
+        img=Image.open(img_path).convert("L")   # greyscale
         img=trans(img)
         img.unsqueeze(0).shape
 
@@ -125,7 +125,7 @@ for t in range(epochs):
 
     loss_fn = nn.MSELoss()
     loss_fn2 = nn.MSELoss()
-    #train_loss = M.train_loop(model2, loss_fn2, optimizer2r)
+
     train_loss,train_loss2=M.train_loop2(train_dataloader, model, loss_fn, optimizer, model2, loss_fn2, optimizer2)
     valid_loss = M.valid_loop(valid_dataloader, model, loss_fn)
 
@@ -145,7 +145,7 @@ for t in range(epochs):
         print("{}-th model saved".format(t + 1))
 
         """ 
-        Add samples from candidates based on the loss
+        Add samples from candidates based on the uncertainty (prediction of the loss prediction model)
         """
         adaptive_sample = loss_predict(test_sample_list)
         dummy = [i for i in test_sample_list if i not in adaptive_sample]

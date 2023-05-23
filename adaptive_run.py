@@ -42,19 +42,19 @@ freq = 100 # add samples per freq.
 num_add_half=50
 Ni=200
 Nf=3800  #199800
-test_sample_list=[a for a in range(Ni,Nf)]
+test_sample_list=[a for a in range(Ni,Nf)] # candidate indices
 
 #--------------- Hyper parameters -----------------------------
-batch_size=2
+batch_size = 2
 learning_rate = 1e-3
 epochs = 2500
 
-optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
+optimizer  = torch.optim.SGD(model.parameters(), lr=learning_rate)
 optimizer2 = torch.optim.SGD(model2.parameters(), lr=learning_rate)
 
 #------------- Data load --------------------
-datapath="./test_adaptive_git/"     # upper directory of train, test, valid directories
-savedir="./ML_adapt/"               # directory for saving models during learning
+datapath = "./test_adaptive_git/"     # upper directory of train, test, valid directories
+savedir = "./ML_adapt/"               # directory for saving models during learning
 #--------------------------------------------------------------
 
 path=savedir+"saved_models"
@@ -89,19 +89,19 @@ def loss_predict(test_sample_list):
         pred2=model2(img.unsqueeze(0).to(device))
         y2_pred=pred2.squeeze(0).detach().cpu().numpy()
         rs_pred=np.sqrt(y2_pred[0]**2)
-        loss_list.append((i,rs_pred))
+        loss_list.append((i,rs_pred))           # list of the predicted loss
 
     check=len(loss_list)
 
     if check :
-        sorted_idx=np.array(loss_list)[:,1].argsort(axis=-1)[::-1]
+        sorted_idx=np.array(loss_list)[:,1].argsort(axis=-1)[::-1]  # sort the predicted loss in the decreasing order
 
     """ Adaptive sampling procedure
     - Predict loss of the data in candidate set (though, the directory name is "test").
     - Based on the prediction of model2, move data with the large losses in the candidate set to the train set.
     """
 
-    list_to_remove = [loss_list[a][0] for a in sorted_idx[0:num_add_half]]
+    list_to_remove = [loss_list[a][0] for a in sorted_idx[0:num_add_half]]  # list of the candiates to move from the "test" directory to the "train" directory
 
     return list_to_remove
 

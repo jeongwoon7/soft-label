@@ -1,7 +1,7 @@
-""" All the functions used in the machine learning process is defined here.
-- Basically, the ResNet architecture is employed for our model.
-
-
+""" --------------------------------------------------------------------------------------------------------
+All the functions used in the machine learning process is defined here.
+- Basically, the ResNet architecture implemented in PyTorch is used.
+------------------------------------------------------------------------------------------------------------
 """
 
 import numpy as np
@@ -12,11 +12,13 @@ from torch import nn
 from torch.utils.data import Dataset, DataLoader
 from torchvision.transforms import transforms
 from torchsummary import summary
-"""
-[Custom dataset for data loading]
+
+
+"""[Custom dataset for data loading]------------------------------------------------------------------------
     Each data in train, valid, test sets consists of figure (*.png) and label (*.txt).
-    A figure is a simplified image of Quantum dots.
+    A figure is a simplified 224x224 image of Quantum dot chain.
     A label is a transmission probability (as a function of energy) expressed by 1000 numerical data points.
+------------------------------------------------------------------------------------------------------------
 """
 class CustomDataset(Dataset):
 
@@ -30,6 +32,7 @@ class CustomDataset(Dataset):
                 self.label_path = path + "/label/" + key
 
         self.transform = transform
+        # sort image and label files according to their names for input pairs
         self.img_list = sorted(glob.glob(self.img_path + '/*.png'))
         self.label_list = sorted(glob.glob(self.label_path + '/*.txt'))
 
@@ -49,15 +52,16 @@ class CustomDataset(Dataset):
                 a = np.float64(line.strip())
                 data.append(a)
                 TE = np.array(data)
-        label = TE
+        label = TE  # Transmission probability T(E) represented by 1000 data points
 
         return image, label
 
-"""
-[ResNet class]
+
+"""[ResNet class]-----------------------------------------------------------------------------------------
     Originally, ResNet was for classifying data into 1000 classes, i.e., num_classes=1000.
     Here, the 1000 numerical values are used for regression to predict transmission probability (label).
     Gray scale is used instead of RGB. So, the number of input channel to nn.Conv2d is 1 instead of 3.
+-----------------------------------------------------------------------------------------------------------
 """
 
 def conv3x3(in_planes, out_planes, stride=1, groups=1, dilation=1):
@@ -174,11 +178,12 @@ class Bottleneck(nn.Module):
         return out
 
 
-#-----------------------------------------------------------------------
-# Basic model and loss prediction model shown in Fig.1 of the manuscript
-#-----------------------------------------------------------------------
-
-# Basic model
+"""-----------------------------------------------------------------------------------------------------
+(1) Basic model shown in Fig.1 of the manuscript
+- num_classes can be any numbers corresponding to the dimension of input label (e.g., 2000 data points)
+--------------------------------------------------------------------------------------------------------
+"""
+# (1) Basic model
 class ResNet(nn.Module):
 
     def __init__(self, block, layers, num_classes=1000, zero_init_residual=False,
@@ -282,8 +287,14 @@ class ResNet(nn.Module):
     def forward(self, x):
         return self._forward_impl(x)
 
+    
+""" -----------------------------------------------------------------------------------------------------
+(2) Loss prediction model
+- Now that the Loss prediction model predicts the loss of the basic model's prediction (a numerical value),
+the num_classes is now 1.
+---------------------------------------------------------------------------------------------------------
+"""
 
-# Loss prediction model
 class loss_pred_ResNet(nn.Module):
 
     def __init__(self, block, layers, num_classes=1, zero_init_residual=False,
@@ -389,12 +400,17 @@ class loss_pred_ResNet(nn.Module):
         return self._forward_impl(x)
 
 
-#-----------------------------------------------------------------------
+"""--------------------------------------------------------------------
 # Training and valid loop for training
-# -- Predict, calculate errors, back-propagate
-#-----------------------------------------------------------------------
+- Predict, calculate errors, back-propagate
+-----------------------------------------------------------------------
+-----------------------------------------------------------------------
+(1) Training loop for basic model
+- X is the tensor representing input 224x224 image
+- Y is the tensor representing the input label (1000 data points)
+-----------------------------------------------------------------------
+"""
 
-# Training loop for basic model
 def train_loop(dataloader, model, loss_fn, optimizer):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     size = len(dataloader.dataset)
@@ -402,8 +418,8 @@ def train_loop(dataloader, model, loss_fn, optimizer):
     train_loss = 0
 
     for batch, (x, y) in enumerate(dataloader):
+  
         # Compute prediction and loss
-
         X = torch.as_tensor(x, dtype=torch.float, device=device)
         Y = torch.as_tensor(y, dtype=torch.float, device=device)
 
@@ -415,7 +431,7 @@ def train_loop(dataloader, model, loss_fn, optimizer):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-
+        
         if batch % 100 == 0:
             loss, current = loss.item(), batch * len(X)
             print(f"Avg loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
@@ -425,7 +441,7 @@ def train_loop(dataloader, model, loss_fn, optimizer):
     return train_loss
 
 
-# Training loop for loss prediction model
+# (2) Training loop for loss prediction model
 def train_loop2(dataloader, model, loss_fn, optimizer, model2, loss_fn2, optimizer2):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     size = len(dataloader.dataset)
@@ -434,23 +450,23 @@ def train_loop2(dataloader, model, loss_fn, optimizer, model2, loss_fn2, optimiz
     train_loss2=0
 
     for batch, (x, y) in enumerate(dataloader):
+        
         # Compute prediction and loss
-
         X = torch.as_tensor(x, dtype=torch.float, device=device)
         Y = torch.as_tensor(y, dtype=torch.float, device=device)
 
         pred = model(X)
-        loss = 1000*loss_fn(pred, Y)  # JH magnified the MSE error by 1000
+        loss = 1000*loss_fn(pred, Y)  # magnified the MSE error by 1000
         train_loss += loss.detach()
 
         #----------09/25/2022 for loss prediction-----------
-        tmp=np.subtract(pred.detach().cpu(),Y.cpu()) # data point-wise loss
-        tmp=np.power(tmp,2)/len(tmp[-1]) #JH, 2022. 12. 21. 1 --> -1
+        tmp=np.subtract(pred.detach().cpu(),Y.cpu()) # point-wise subtraction
+        tmp=np.power(tmp,2)/len(tmp[-1])             
         error=[sum(tmp[i]) for i in range(len(tmp))]
         Y2 = torch.tensor(error, device=device).unsqueeze(1)  # label of the loss prediction model
 
-        pred2=model2(X)  # torch.Size([2, 1])
-        loss2= loss_fn2(pred2,Y2) # batch averaged loss
+        pred2=model2(X)             # prediction of the loss prediction model 
+        loss2= loss_fn2(pred2,Y2)   # batch averaged loss
         train_loss2 += loss2.detach()
 
         # Backpropagation
@@ -463,17 +479,18 @@ def train_loop2(dataloader, model, loss_fn, optimizer, model2, loss_fn2, optimiz
         loss2.backward()
         optimizer2.step()
 
-        if batch % 50 == 0: 
+        if batch % 100 == 0: 
             loss, current = loss.item(), batch * len(X)
             print(f"Avg loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
 
     train_loss /= num_batches  # size
     train_loss2 /= num_batches
-    print(f"Train Error: Avg loss: {train_loss:>8f}")
-    print(f"Train Error2: Avg loss: {train_loss2:>10f} \n")
+    print(f"Train Error: Avg loss: {train_loss:>8f}")           # error of the basic model
+    print(f"Train Error2: Avg loss: {train_loss2:>10f} \n")     # error of the loss prediction model
     return train_loss, train_loss2
 
 
+# (3) The common valid loop
 def valid_loop(dataloader, model, loss_fn):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     size = len(dataloader.dataset)

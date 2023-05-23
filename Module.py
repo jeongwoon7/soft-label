@@ -1,3 +1,9 @@
+""" All the functions used in the machine learning process is defined here.
+- Basically, the ResNet architecture is employed for our model.
+
+
+"""
+
 import numpy as np
 import glob
 from PIL import Image
@@ -429,7 +435,6 @@ def train_loop2(dataloader, model, loss_fn, optimizer, model2, loss_fn2, optimiz
 
     for batch, (x, y) in enumerate(dataloader):
         # Compute prediction and loss
-        # cross entropy 대신 MSE로 바꿨을 때 "Found dtype Double but expected Float" 에러 나옴.
 
         X = torch.as_tensor(x, dtype=torch.float, device=device)
         Y = torch.as_tensor(y, dtype=torch.float, device=device)
@@ -442,7 +447,7 @@ def train_loop2(dataloader, model, loss_fn, optimizer, model2, loss_fn2, optimiz
         tmp=np.subtract(pred.detach().cpu(),Y.cpu()) # data point-wise loss
         tmp=np.power(tmp,2)/len(tmp[-1]) #JH, 2022. 12. 21. 1 --> -1
         error=[sum(tmp[i]) for i in range(len(tmp))]
-        Y2 = torch.tensor(error, device=device).unsqueeze(1)  # loss prediction의 레이블!
+        Y2 = torch.tensor(error, device=device).unsqueeze(1)  # label of the loss prediction model
 
         pred2=model2(X)  # torch.Size([2, 1])
         loss2= loss_fn2(pred2,Y2) # batch averaged loss
@@ -458,7 +463,7 @@ def train_loop2(dataloader, model, loss_fn, optimizer, model2, loss_fn2, optimiz
         loss2.backward()
         optimizer2.step()
 
-        if batch % 50 == 0:  # 10 == 0:
+        if batch % 50 == 0: 
             loss, current = loss.item(), batch * len(X)
             print(f"Avg loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
 

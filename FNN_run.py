@@ -1,5 +1,4 @@
 # Feed Forward Neural Network for the comparative analysis
-
 import torch
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
@@ -20,6 +19,7 @@ num_qd = 5 # number of quantum dots in a system
     A label is a transmission probability (as a function of energy) expressed by 1000 numerical data points.
 """
 
+# to read label
 class CustomDataset(Dataset):
     def __init__(self, csv_file, path):
         self.data = pd.read_csv(csv_file, header = None, sep = " ")
@@ -41,6 +41,7 @@ class CustomDataset(Dataset):
         return sample, label
 
 
+# to read feature vectors in dlist.txt, dlists2.txt, and dlist3.txt for train, valid, and test sets
 class CustomDataset2(Dataset):
     def __init__(self, csv_file, path, N=0):
         self.data = pd.read_csv(csv_file, header = None, sep = " ")

@@ -7,7 +7,7 @@ by Moon-Hyun Cha and Jeongwoon Hwang, submitted
 * In each directory, there're figures (224x224 image data mimicking quantum dot chains) and corresponding labels (transmission probability data represented by 1000 data points)
 
 2. Code for machine learning : basic_run.py, adaptive_run.py, FNN_run.py
-* python3 basic_run.py, in terminal
+* In terminal, python3 basic_run.py > stdout
 
 3. Module containing classes & functions used for the ML : Module.py
 * Customdataset, ResNet, loss_pred_ResNet, train_loop, valid_loop

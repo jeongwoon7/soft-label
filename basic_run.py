@@ -1,4 +1,11 @@
 # run file for basic model
+""" Job script example for running in terminal
+-----------------------------------------------
+#!/bin/bash
+mkdir ./basic/
+python3 basic.py > ./basic/stdout
+-----------------------------------------------
+"""
 
 import Module as M
 import torch
@@ -7,6 +14,7 @@ import os
 from time import time
 import matplotlib.pyplot as plt
 #torch.set_num_threads(8)
+
 
 #----- Model initialize
 device='cuda' if torch.cuda.is_available() else 'cpu'

@@ -183,7 +183,6 @@ class Bottleneck(nn.Module):
 - num_classes can be any numbers corresponding to the dimension of input label (e.g., 2000 data points)
 --------------------------------------------------------------------------------------------------------
 """
-# (1) Basic model
 class ResNet(nn.Module):
 
     def __init__(self, block, layers, num_classes=1000, zero_init_residual=False,
@@ -401,11 +400,11 @@ class loss_pred_ResNet(nn.Module):
 
 
 """--------------------------------------------------------------------
-# Training and valid loop for training
+# Train and valid loops for model training
 - Predict, calculate errors, back-propagate
 -----------------------------------------------------------------------
 -----------------------------------------------------------------------
-(1) Training loop for basic model
+(1) Training loop for the basic model
 - X is the tensor representing input 224x224 image
 - Y is the tensor representing the input label (1000 data points)
 -----------------------------------------------------------------------
@@ -441,7 +440,10 @@ def train_loop(dataloader, model, loss_fn, optimizer):
     return train_loss
 
 
-# (2) Training loop for loss prediction model
+"""--------------------------------------------------------------------
+(2) Training loop for the loss prediction model
+-----------------------------------------------------------------------
+"""
 def train_loop2(dataloader, model, loss_fn, optimizer, model2, loss_fn2, optimizer2):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     size = len(dataloader.dataset)
@@ -490,7 +492,10 @@ def train_loop2(dataloader, model, loss_fn, optimizer, model2, loss_fn2, optimiz
     return train_loss, train_loss2
 
 
-# (3) The common valid loop
+"""--------------------------------------------------------------------
+(3) The common valid loop
+-----------------------------------------------------------------------
+"""
 def valid_loop(dataloader, model, loss_fn):
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     size = len(dataloader.dataset)

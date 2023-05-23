@@ -16,8 +16,7 @@ N=4000 # number of training samples
 num_qd = 5 # number of quantum dots in a system
 """
 [Custom dataset for data loading]
-    Each data in train, valid, test sets consists of figure (*.png) and label (*.txt).
-    A figure is a simplified image of Quantum dots.
+    Each data consists of label (*.txt) and corresponding input feature vector lists in dlist.txt, dlists2.txt, and dlist3.txt
     A label is a transmission probability (as a function of energy) expressed by 1000 numerical data points.
 """
 

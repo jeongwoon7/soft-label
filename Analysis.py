@@ -15,10 +15,10 @@ layers=[2,2,2,2]
 device='cuda' if torch.cuda.is_available() else 'cpu'
 
 rootdir="./adaptive_sampling"
-path2= rootdir + "/test/label/"
 path1=rootdir + "/test/figures/"
+path2= rootdir + "/test/label/"
 
-tset=[3976, 206, 3669] # indices of best or worst results
+tset=[3976, 206, 3669] # Put indices of best or worst results calcaulted before
 
 label_list = []
 pred_list = []

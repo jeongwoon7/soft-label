@@ -19,24 +19,29 @@ device='cuda' if torch.cuda.is_available() else 'cpu'
 model=M.ResNet(M.BasicBlock,[2,2,2,2]).to(device)  #layers
 model2=M.loss_pred_ResNet(M.BasicBlock,[2,2,2,2]).to(device)
 
-"""
+""" --------------------------------------------------------------------------------------------------------
 - num_add = num_add_half * 2
 - Add 100 samples per {freq} epochs.  
     - sample 50 based on the predicted loss of the loss prediction model
     - sample 50 for random
-- Initially, train, test, and valid set consist of 200, 199600, and 200 data points. (total, 200000)
+- Initially, train, test, and valid set consist of 200, 199600, and 200 data points. (total, 200000 in the original work))
 - Here, "test" set is actually "candidate" set; 
   data with the large predicted loss will be added to train set during the learning.
 - A separate test data should be used for analysis with a trained model. 
-- Index for data files
+- Index for data files (in the original work)
     train set : from 0 to 199
     test set : from 200 to 199799
-    valid set : from 199800 to 199999
+    valid set : from 199800 to 199999 
+    
+- Due to the storage limit, we counldn't upload the Data directory "test-200000" with 200000 data.
+    * However, to see how the adaptive run work, you can use "test" with 4000 data, instead. 
+    * in this case, train set : from 0 to 199, test set : from 200 to 3799, and valid set : from 3800 to 3999
+-------------------------------------------------------------------------------------------------------------
 """
 freq = 100 # add samples per freq.
 num_add_half=50
 Ni=200
-Nf=199800
+Nf=3800  #199800
 test_sample_list=[a for a in range(Ni,Nf)]
 
 #--------------- Hyper parameters -----------------------------
@@ -48,7 +53,7 @@ optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 optimizer2 = torch.optim.SGD(model2.parameters(), lr=learning_rate)
 
 #------------- Data load --------------------
-datapath="./test-200000/"  # upper directory of train, test, valid directories
+datapath="./test/"  # upper directory of train, test, valid directories
 savedir="./ML_adapt/" # directory for saving models during learning
 #--------------------------------------------------------------
 

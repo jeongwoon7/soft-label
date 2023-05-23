@@ -14,4 +14,4 @@ by Moon-Hyun Cha and Jeongwoon Hwang, submitted
 3. Module containing classes & functions used for the ML : Module.py
 * Customdataset, ResNet, loss_pred_ResNet, train_loop, valid_loop
  
-4. Code for analysis : Analysis.py
+4. Code for analysis example : Analysis.py

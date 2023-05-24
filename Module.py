@@ -1,5 +1,5 @@
 """ --------------------------------------------------------------------------------------------------------
-All the functions used in the machine learning process is defined here.
+All the functions used in the machine learning process are defined here.
 - Basically, the ResNet architecture implemented in PyTorch is used.
 ------------------------------------------------------------------------------------------------------------
 """

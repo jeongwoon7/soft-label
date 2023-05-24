@@ -1,4 +1,12 @@
 # Feed Forward Neural Network for the comparative analysis
+""" Job script example for running in terminal with data directory "./samples/"
+-----------------------------------------------
+#!/bin/bash
+mkdir ./FNN_model/
+python3 FNN_run.py > ./FNN_model/stdout
+-----------------------------------------------
+"""
+
 import torch
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader

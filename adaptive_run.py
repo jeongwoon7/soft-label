@@ -1,4 +1,11 @@
 # run file for adaptive sampling with loss prediction model
+""" Job script example for running in terminal with data directory "./test_adaptive_git/"
+-----------------------------------------------
+#!/bin/bash
+mkdir ./ML_adapt/
+python3 adaptive_run.py > ./ML_adapt/stdout
+-----------------------------------------------
+"""
 
 import Module as M
 import torch

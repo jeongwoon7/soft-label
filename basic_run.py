@@ -1,5 +1,5 @@
 # run file for basic model
-""" Job script example for running in terminal
+""" Job script example for running in terminal with data directory "./test_lhc"
 -----------------------------------------------
 #!/bin/bash
 mkdir ./basic/

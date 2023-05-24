@@ -73,7 +73,7 @@ for t in range(epochs):
     if (t+1) % 50 == 0:
         fname = str(t + 1) + ".pt"
         PATH = os.path.join(path, fname)
-        torch.save(model.state_dict(), PATH)
+        torch.save(model.state_dict(), PATH)    # save the state of the model
         print("{}-th model saved".format(t + 1))
     # ------------------------------------------------
 

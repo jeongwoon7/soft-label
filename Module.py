@@ -418,7 +418,10 @@ def train_loop(dataloader, model, loss_fn, optimizer):
 
     for batch, (x, y) in enumerate(dataloader):
   
-        # Compute prediction and loss
+        """ Compute prediction and loss
+        # X.shape --> torch.Size([batch_size,1,224,224])
+        # Y.shape --> torch.Size([batch_size,1000])
+        """
         X = torch.as_tensor(x, dtype=torch.float, device=device)
         Y = torch.as_tensor(y, dtype=torch.float, device=device)
 
@@ -461,7 +464,7 @@ def train_loop2(dataloader, model, loss_fn, optimizer, model2, loss_fn2, optimiz
         Y = torch.as_tensor(y, dtype=torch.float, device=device)
 
         pred = model(X)
-        loss = 1000*loss_fn(pred, Y)  # magnified the MSE error by 1000
+        loss = 1000*loss_fn(pred, Y)  # magnify the MSE error by 1000
         train_loss += loss.detach()
 
         #----------09/25/2022 for loss prediction-----------

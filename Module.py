@@ -1,6 +1,6 @@
 """ --------------------------------------------------------------------------------------------------------
 All the functions used in the machine learning process are defined here.
-- Basically, the ResNet architecture implemented in PyTorch is used.
+- The model is implemented by using ResNet in PyTorch.
 ------------------------------------------------------------------------------------------------------------
 """
 
@@ -180,7 +180,7 @@ class Bottleneck(nn.Module):
 
 """-----------------------------------------------------------------------------------------------------
 (1) Basic model shown in Fig.1 of the manuscript
-- num_classes can be any numbers corresponding to the dimension of input label (e.g., 2000 data points)
+- num_classes can be any number corresponding to the dimension of input label (e.g., 2000 data points)
 --------------------------------------------------------------------------------------------------------
 """
 class ResNet(nn.Module):

@@ -322,7 +322,7 @@ class loss_pred_ResNet(nn.Module):
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
 
         self.layer1 = self._make_layer(block, 64, layers[0])
-        self.layer2 = self._make_layer(block, 128, layers[1], stride=2,  # 여기서부터 downsampling적용
+        self.layer2 = self._make_layer(block, 128, layers[1], stride=2,  # apply downsampling
                                        dilate=replace_stride_with_dilation[0])
         self.layer3 = self._make_layer(block, 256, layers[2], stride=2,
                                        dilate=replace_stride_with_dilation[1])
@@ -357,8 +357,8 @@ class loss_pred_ResNet(nn.Module):
             self.dilation *= stride
             stride = 1
 
-        # the number of filters is doubled: self.inplanes와 planes 사이즈를 맞춰주기 위한 projection shortcut
-        # the feature map size is halved: stride=2로 downsampling
+        # the number of filters is doubled
+        # the feature map size is halved: stride=2, downsampling
         if stride != 1 or self.inplanes != planes * block.expansion:
             downsample = nn.Sequential(
                 conv1x1(self.inplanes, planes * block.expansion, stride),
@@ -368,7 +368,7 @@ class loss_pred_ResNet(nn.Module):
         layers = []
         layers.append(block(self.inplanes, planes, stride, downsample, self.groups,
                             self.base_width, previous_dilation, norm_layer))
-        self.inplanes = planes * block.expansion  # inplanes 업데이트
+        self.inplanes = planes * block.expansion  # inplanes updated
 
         for _ in range(1, blocks):
             layers.append(block(self.inplanes, planes, groups=self.groups,

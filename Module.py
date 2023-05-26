@@ -290,7 +290,7 @@ class ResNet(nn.Module):
 """ -----------------------------------------------------------------------------------------------------
 (2) Loss prediction model
 - Now that the Loss prediction model predicts the loss of the basic model's prediction (a numerical value),
-the num_classes is now 1.
+the num_classes is 1 for this case.
 ---------------------------------------------------------------------------------------------------------
 """
 

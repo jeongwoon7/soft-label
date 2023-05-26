@@ -32,17 +32,17 @@ model2=M.loss_pred_ResNet(M.BasicBlock,[2,2,2,2]).to(device)
 - Add 100 samples per {freq} epochs.  
     - sample 50 based on the predicted loss of the loss prediction model
     - sample 50 for random
-- Initially, train, test, and valid set consist of 200, 199600, and 200 data points. (total, 200000 in the original work))
+- Initially, train, test, and valid sets consist of 200, 199600, and 200 data points. (total, 200000 in the original work))
 - Here, "test" set is actually "candidate" set; 
-  data with the large predicted loss will be added to train set during the learning.
-- A separate test data should be used for analysis with a trained model. 
+  data with the large predicted loss in the test set will be added to the train set during the learning.
+- A separate test data should be used for an analysis with a trained model. 
 - Index for data files (in the original work)
     train set : from 0 to 199
-    test set : from 200 to 199799
+    test set  : from 200 to 199799
     valid set : from 199800 to 199999 
 - Due to the storage limit, however, we counldn't upload the whole 200000 data.
     * However, to see how the adaptive run works, you can use "test_adaptive_git" with 4000 data, instead. 
-    * in this case, train set : from 0 to 199, test set : from 200 to 3799, and valid set : from 3800 to 3999
+    * In this case, train set : from 0 to 199, test set : from 200 to 3799, and valid set : from 3800 to 3999
 -------------------------------------------------------------------------------------------------------------
 """
 freq = 100 # add samples per freq.
@@ -56,8 +56,8 @@ batch_size = 2
 learning_rate = 1e-3
 epochs = 2500
 
-optimizer  = torch.optim.SGD(model.parameters(), lr=learning_rate)
-optimizer2 = torch.optim.SGD(model2.parameters(), lr=learning_rate)
+optimizer  = torch.optim.SGD(model.parameters(), lr=learning_rate)  # optimizer for the basic model
+optimizer2 = torch.optim.SGD(model2.parameters(), lr=learning_rate) # optimizer for the loss prediction model
 
 #------------- Data load --------------------
 datapath = "./test_adaptive_git/"     # upper directory of train, test, valid directories
@@ -76,8 +76,8 @@ train_loss_list = []
 train_loss2_list = []
 valid_loss_list = []
 
-# ---- loss_predict
-tic0=time()  # For total time cal.
+# ---- loss_predict ------
+tic0=time()  # For the total elapsed time calculation
 
 def loss_predict(test_sample_list):
     loss_list=[]
